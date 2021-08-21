@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using NEOTool.Enemy;
 using NEOTool.Event;
+using NEOTool.Item;
 using NEOTool.Pins;
 using NEOTool.Portraits;
 using NEOTool.Shop;
@@ -74,6 +75,10 @@ namespace NEOTool
       var baseUsesTypes = new BaseUsesTypes("F:/NEO/BaseUsesTypes.csv");
       var pinGrowth = new PinGrowthTable(masterDataLocation);
       pins.ForEach(pin => pin.ThirdPostInit(pinGrowth));
+      var food = (JsonConvert.DeserializeObject(File.ReadAllText(Path.Combine(masterDataLocation, "Food.txt"))) as JObject)
+        .GetValue("mTarget")
+        .ToObject(typeof(List<Food>)) as List<Food>;
+      food.ForEach(fe => fe.PostInit(gameText, allItems));
       
       var wikiLines = new List<string>();
       wikiLines.Add("==Pins==");
